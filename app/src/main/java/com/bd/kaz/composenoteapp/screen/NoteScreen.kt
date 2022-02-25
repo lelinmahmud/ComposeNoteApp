@@ -1,5 +1,6 @@
 package com.bd.kaz.composenoteapp.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bd.kaz.composenoteapp.components.NoteButton
@@ -38,6 +40,8 @@ fun NoteScreen(
     var description = remember {
         mutableStateOf("")
     }
+
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -74,23 +78,32 @@ fun NoteScreen(
                         }) description.value = it
                 },
                 modifier = Modifier.padding(top = 9.dp, bottom = 8.dp ))
-            NoteButton(label = "Save", onClick = {
-                if (title.value.isNotEmpty() && description.value.isNotEmpty()){
-                    title.value = ""
-                    description.value= ""
-                }
-            })
+            NoteButton(label = "Save",
+                onClickd = {
+                    if (title.value.isNotEmpty() && description.value.isNotEmpty()) {
+                        onAddNote(Note(title = title.value,
+                            description = description.value))
+                        title.value = ""
+                        description.value = ""
+                        Toast.makeText(context, "Note Added",
+                            Toast.LENGTH_SHORT).show()
+                    }
+                })
+
+        }
 
             Divider(modifier = Modifier.padding(10.dp))
             LazyColumn(){
                 items(notes){ note->
-                    NoteRow(note = note, onNoteClick ={} )
+                    NoteRow(note = note, onNoteClick ={
+                        onRemoveNote(it)
+                    } )
                 }
             }
         }
         
     }
-}
+
 
 @Composable
 fun NoteRow(
@@ -110,7 +123,9 @@ fun NoteRow(
 
         Column(
             modifier = Modifier
-                .clickable { }
+                .clickable {
+                    onNoteClick(note)
+                }
                 .padding(horizontal = 14.dp, vertical = 6.dp),
             horizontalAlignment = Alignment.Start
         ) {
