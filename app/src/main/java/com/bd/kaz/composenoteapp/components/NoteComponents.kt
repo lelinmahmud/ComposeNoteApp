@@ -52,11 +52,11 @@ fun NoteInputText(
 fun NoteButton(
     modifier: Modifier = Modifier,
     label: String,
-    onClick: ()-> Unit,
+    onClickd: ()-> Unit,
     enabled: Boolean = true
 ){
     Button(
-        onClick = { onClick },
+        onClick =  onClickd ,
         shape = CircleShape,
         enabled = enabled,
         modifier = modifier
@@ -65,3 +65,4 @@ fun NoteButton(
         Text(text = label)
     }
 }
+
