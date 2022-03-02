@@ -3,18 +3,17 @@ package com.bd.kaz.composenoteapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.bd.kaz.composenoteapp.data.NotesDataSource
-import com.bd.kaz.composenoteapp.model.Note
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bd.kaz.composenoteapp.screen.NoteScreen
+import com.bd.kaz.composenoteapp.screen.NoteViewModel
 import com.bd.kaz.composenoteapp.ui.theme.ComposeNoteAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -27,24 +26,26 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-
-                    val notes = remember {
-                        mutableStateListOf<Note>()
-                    }
-
-                    NoteScreen(
-                        notes = notes,
-                        onAddNote = {
-                           notes.add(it)
-                        },
-                        onRemoveNote = {
-                            notes.remove(it)
-                        }
-                    )
+                    val noteViewModel: NoteViewModel by viewModels()
+                    NotesApp(noteViewModel = noteViewModel)
                 }
             }
         }
     }
+}
+
+@Composable
+fun NotesApp(noteViewModel: NoteViewModel = viewModel()){
+    val noteList = noteViewModel.getAllNotes()
+    NoteScreen(
+        notes = noteList,
+        onAddNote = {
+            noteViewModel.addNote(it)
+        },
+        onRemoveNote = {
+            noteViewModel.removeNote(it)
+        }
+    )
 }
 
 @Composable
