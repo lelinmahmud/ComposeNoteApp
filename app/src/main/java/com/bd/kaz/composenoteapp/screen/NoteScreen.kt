@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.bd.kaz.composenoteapp.components.NoteButton
 import com.bd.kaz.composenoteapp.components.NoteInputText
 import com.bd.kaz.composenoteapp.model.Note
+import com.bd.kaz.composenoteapp.util.formatDate
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -132,7 +133,7 @@ fun NoteRow(
             
             Text(text = note.title, style = MaterialTheme.typography.subtitle2)
             Text(text = note.description, style = MaterialTheme.typography.subtitle1)
-//            Text(text = note.entryTime.format(DateTimeFormatter.ofPattern("EEE,d MMM")), style = MaterialTheme.typography.caption, modifier = Modifier.padding(bottom = 5.dp))
+            Text(text = formatDate(note.entryTime.time), style = MaterialTheme.typography.caption, modifier = Modifier.padding(bottom = 5.dp))
 
         }
 
